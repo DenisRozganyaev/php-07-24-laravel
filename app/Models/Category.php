@@ -12,6 +12,8 @@ class Category extends Model
 
     protected $guarded = [];
 
+    // $category->products => Collection of all products
+    // $category->products() => query builder for products (for this category)
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class);
