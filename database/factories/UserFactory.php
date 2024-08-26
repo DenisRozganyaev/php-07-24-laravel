@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\RolesEnum;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -24,12 +26,25 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->firstName(),
+            'lastname' => fake()->lastName(),
+            'phone' => fake()->unique()->e164PhoneNumber(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'birthdate' => fake()->dateTimeBetween('-70 years', '-18 years')
+                ->format('Y-m-d'),
+            'password' => Hash::make(static::$password ??= 'test1234'),
             'remember_token' => Str::random(10),
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            if (!$user->hasAnyRole(RolesEnum::values())) {
+                $user->assignRole(RolesEnum::CUSTOMER->value);
+            }
+        });
     }
 
     /**
@@ -40,5 +55,26 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email' => 'admin@admin.com',
+        ])->afterCreating(function(User $user) {
+            $user->syncRoles([RolesEnum::ADMIN->value]);
+        });
+    }
+
+    public function moderator(): static
+    {
+        return $this->afterCreating(function(User $user) {
+            $user->syncRoles([RolesEnum::MODERATOR->value]);
+        });
+    }
+
+    public function withEmail(string $email): static
+    {
+        return $this->state(fn (array $attributes) => ['email' => $email]);
     }
 }
