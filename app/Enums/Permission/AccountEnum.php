@@ -5,7 +5,7 @@ namespace App\Enums\Permission;
 enum AccountEnum: string
 {
     case EDIT = 'edit account';
-    case DELETE  = 'delete account';
+    case DELETE = 'delete account';
 
     public static function values(): array
     {

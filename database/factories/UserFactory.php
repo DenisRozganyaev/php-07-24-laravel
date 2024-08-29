@@ -41,7 +41,7 @@ class UserFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (User $user) {
-            if (!$user->hasAnyRole(RolesEnum::values())) {
+            if (! $user->hasAnyRole(RolesEnum::values())) {
                 $user->assignRole(RolesEnum::CUSTOMER->value);
             }
         });
@@ -61,14 +61,14 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email' => 'admin@admin.com',
-        ])->afterCreating(function(User $user) {
+        ])->afterCreating(function (User $user) {
             $user->syncRoles([RolesEnum::ADMIN->value]);
         });
     }
 
     public function moderator(): static
     {
-        return $this->afterCreating(function(User $user) {
+        return $this->afterCreating(function (User $user) {
             $user->syncRoles([RolesEnum::MODERATOR->value]);
         });
     }
