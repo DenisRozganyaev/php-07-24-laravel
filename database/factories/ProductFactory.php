@@ -35,7 +35,7 @@ class ProductFactory extends Factory
 
     protected function generateImage(string $slug): string
     {
-        $dirName = 'faker/products/'.$slug;
+        $dirName = 'public/faker/products/'.$slug;
         $faker = \Faker\Factory::create();
         $faker->addProvider(new \Smknstd\FakerPicsumImages\FakerPicsumImagesProvider($faker));
 
