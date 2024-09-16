@@ -155,11 +155,11 @@
                                    class="col-md-4 col-form-label text-md-end">{{ __('Additional Images') }}</label>
 
                             <div class="col-12 mb-4 d-flex align-items-center justify-content-center">
-                                <div id="edit-images-wrapper" class="row">
+                                <div id="images-wrapper" class="row">
                                     @foreach($product->images as $image)
                                         <div class='mb-4 col-md-6 images-wrapper-item'>
                                             <button class="btn btn-danger images-wrapper-item-remove"
-                                                data-url="{{route('ajax.image.remove', $image)}}">
+                                                data-url="{{route('ajax.images.remove', $image)}}">
                                                 <i class="fa-solid fa-minus"></i>
                                             </button>
                                             <img src='{{$image->url}}' style='width: 100%' />
@@ -168,20 +168,14 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input id="edit-images" type="file"
-                                               class="form-control @error('images') is-invalid @enderror d-none" name="images[]" multiple>
-                                    </div>
-                                    <div class="col-md-6 d-flex align-items-center justify-content-end">
-                                        <div id="spinner" class="spinner-border d-none me-2" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                        <button class="btn btn-outline-success add-images"
-                                                data-upload="{{route('ajax.product.images.upload', $product)}}"
-                                        >Upload images <i class="fa-solid fa-plus"></i></button>
-                                    </div>
-                                </div>
+                                <input id="edit-images" type="file"
+                                       class="form-control @error('images') is-invalid @enderror" name="images[]" multiple>
+
+                                @error('images')
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
 
@@ -196,6 +190,6 @@
 @endsection
 
 @push('footer-js')
-    @vite(['resources/js/admin/images-preview.js', 'resources/js/admin/images-actions.js'])
+    @vite(['resources/js/admin/products-preview.js', 'resources/js/admin/images-actions.js'])
 @endpush
 

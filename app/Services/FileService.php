@@ -23,5 +23,12 @@ class FileService implements Contracts\FileServiceContract
     public function delete(string $filePath): void
     {
         Storage::delete($filePath);
+
+        $path = collect(explode('/', $filePath));
+        $path = $path->except($path->keys()->last())->implode('/');
+
+        if (empty(Storage::files($path))) {
+            Storage::deleteDirectory($path);
+        }
     }
 }

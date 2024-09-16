@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\ImagesRepositoryContract;
 use App\Repositories\Contracts\ProductsRepositoryContract;
+use App\Repositories\ImagesRepository;
 use App\Repositories\ProductsRepository;
 use App\Services\Contracts\FileServiceContract;
 use App\Services\FileService;
@@ -14,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public array $bindings = [
         ProductsRepositoryContract::class => ProductsRepository::class,
         FileServiceContract::class => FileService::class,
+        ImagesRepositoryContract::class => ImagesRepository::class,
     ];
 
     /**

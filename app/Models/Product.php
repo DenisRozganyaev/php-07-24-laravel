@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Observers\ProductObserver;
 use App\Services\Contracts\FileServiceContract;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * @mixin IdeHelperProduct
  */
+#[ObservedBy(ProductObserver::class)]
 class Product extends Model
 {
     use HasFactory;
@@ -47,5 +50,23 @@ class Product extends Model
             $image,
             'products/' . $this->attributes['slug']
         );
+    }
+
+    public function imagesPath(): Attribute
+    {
+        return Attribute::get(fn() => 'products/' . $this->attributes['slug']);
+    }
+
+    public function withDiscount(): Attribute
+    {
+        return Attribute::get(fn() => $this->attributes['discount'] > 0);
+    }
+
+    public function finalPrice(): Attribute
+    {
+        return Attribute::get(fn() => round(
+            $this->attributes['price'] - ($this->attributes['price'] * ($this->attributes['discount'] / 100)),
+            2
+        ));
     }
 }
