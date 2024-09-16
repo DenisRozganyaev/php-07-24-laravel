@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Permission\ProductEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Products\CreateRequest;
 use App\Http\Requests\Admin\Products\EditRequest;
 use App\Models\Category;
+use App\Models\Image;
 use App\Models\Product;
 use App\Repositories\Contracts\ProductsRepositoryContract;
-use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
@@ -17,7 +18,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['categories'])->paginate(10);
+        $products = Product::with(['categories'])->orderByDesc('id')->paginate(10);
 
         return view('admin.products.index', compact('products'));
     }
@@ -48,9 +49,17 @@ class ProductsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        //
+        $product->load(['categories', 'images']);
+
+        $productCategories = $product->categories->pluck('id')->toArray();
+
+        return view('admin.products.edit', [
+            'categories' => Category::all(),
+            'product' => $product,
+            'productCategories' => $productCategories
+        ]);
     }
 
     /**
@@ -58,14 +67,33 @@ class ProductsController extends Controller
      */
     public function update(EditRequest $request, Product $product, ProductsRepositoryContract $repository)
     {
-        //
+        if ($repository->update($product, $request)) {
+            notify()->success("Product '$product->title' was updated");
+            return redirect()->route('admin.products.edit', $product);
+        }
+
+        notify()->error('Oops! Something went wrong.');
+
+        return redirect()->back()->withInput();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        try {
+            $this->middleware('permission:'. ProductEnum::DELETE->value);
+            $product->deleteOrFail();
+
+            notify()->success("Product '$product->title' was updated");
+
+            return redirect()->back();
+        } catch (\Throwable $exception) {
+            logs()->error($exception->getMessage());
+            notify()->error('Oops! Something went wrong.');
+
+            return redirect()->back()->withInput();
+        }
     }
 }

@@ -31,7 +31,7 @@ class CreateRequest extends FormRequest
             'quantity' => ['required', 'numeric', 'min:0'],
             'categories.*' => ['required', 'integer', 'exists:categories,id'],
             'thumbnail' => ['required', 'image', 'mimes:jpg,jpeg,png'],
-//            'images.*' => []
+            'images.*' => ['image', 'mimes:jpg,jpeg,png']
         ];
     }
 }
