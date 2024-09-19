@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Attributes\Option;
 use App\Observers\ProductObserver;
 use App\Services\Contracts\FileServiceContract;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -30,6 +31,12 @@ class Product extends Model
     public function images(): MorphMany
     {
         return $this->morphMany(Image::class, 'imageable');
+    }
+
+    public function options(): BelongsToMany
+    {
+        return $this->belongsToMany(Option::class, 'attribute_option_product', 'product_id', 'attribute_option_id')
+            ->withPivot(['quantity', 'price']);
     }
 
     public function thumbnailUrl(): Attribute

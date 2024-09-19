@@ -4,7 +4,8 @@
     <div class="container">
         <div class="row">
             <div class="col-12 d-flex align-items-center justify-content-center pt-5">
-                <form class="card w-50" method="POST" enctype="multipart/form-data" action="{{route('admin.products.update', $product)}}">
+                <form class="card w-50" method="POST" enctype="multipart/form-data"
+                      action="{{route('admin.products.update', $product)}}">
                     @method('PUT')
                     @csrf
 
@@ -62,7 +63,7 @@
                                         class="form-control @error('categories') is-invalid @enderror" multiple>
                                     @foreach($categories as $category)
                                         <option value="{{$category->id}}"
-                                        @if (in_array($category->id, $productCategories)) selected @endif
+                                                @if (in_array($category->id, $productCategories)) selected @endif
                                         >{{$category->name}}</option>
                                     @endforeach
                                 </select>
@@ -131,12 +132,48 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <h5>Attributes</h5>
+                                </div>
+                                <div class="col-10">
+                                    <select class="form-select" id="attributes" multiple>
+                                        @foreach($attributes as $attribute)
+                                            <optgroup label="{{$attribute->name}}">
+                                                @foreach($attribute->options as $option)
+                                                    @if(in_array($option->id, $selectedOptions))
+                                                        @continue
+                                                    @endif
+
+                                                    <option value="{{$option->id}}">{{$option->value}}</option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-outline-info add-options" type="button"><i class="fa-regular fa-square-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="row options-wrapper" data-key="0">
+                                @foreach($product->options as $key => $option)
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-text">{{$option->value}}</span>
+                                        <input type="hidden" name="options[{{$key}}][attribute_option_id]" min="0" value="{{$option->id}}" class="form-control">
+                                        <input type="number" name="options[{{$key}}][quantity]" min="0" placeholder="Quantity" class="form-control">
+                                        <input type="number" name="options[{{$key}}][price]" placeholder="Single price" class="form-control">
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
                         <div class="row mb-3">
                             <label for="thumbnail"
                                    class="col-md-4 col-form-label text-md-end">{{ __('Thumbnail') }}</label>
 
                             <div class="col-md-12 mb-4 d-flex align-items-center justify-content-center">
-                                <img src="{{$product->thumbnailUrl}}" id="thumbnail-preview" style="width: 50%;" />
+                                <img src="{{$product->thumbnailUrl}}" id="thumbnail-preview" style="width: 50%;"/>
                             </div>
                             <div class="col-md-12">
                                 <input id="thumbnail" type="file"
@@ -159,17 +196,18 @@
                                     @foreach($product->images as $image)
                                         <div class='mb-4 col-md-6 images-wrapper-item'>
                                             <button class="btn btn-danger images-wrapper-item-remove"
-                                                data-url="{{route('ajax.images.remove', $image)}}">
+                                                    data-url="{{route('ajax.images.remove', $image)}}">
                                                 <i class="fa-solid fa-minus"></i>
                                             </button>
-                                            <img src='{{$image->url}}' style='width: 100%' />
+                                            <img src='{{$image->url}}' style='width: 100%'/>
                                         </div>
                                     @endforeach
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <input id="edit-images" type="file"
-                                       class="form-control @error('images') is-invalid @enderror" name="images[]" multiple>
+                                       class="form-control @error('images') is-invalid @enderror" name="images[]"
+                                       multiple>
 
                                 @error('images')
                                 <span class="invalid-feedback" role="alert">
@@ -190,6 +228,10 @@
 @endsection
 
 @push('footer-js')
-    @vite(['resources/js/admin/products-preview.js', 'resources/js/admin/images-actions.js'])
+    @vite([
+    'resources/js/admin/products-preview.js',
+    'resources/js/admin/images-actions.js',
+    'resources/js/admin/attributes.js'
+    ])
 @endpush
 

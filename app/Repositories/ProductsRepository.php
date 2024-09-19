@@ -63,17 +63,22 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
             $data['images'] ?? [],
             $product->imagesPath
         );
+
+        if(!empty($data['options'])) {
+            $product->options()->syncWithoutDetaching($data['options']);
+        }
     }
 
     protected function formRequestData(CreateRequest|EditRequest $request): array
     {
         return [
             'attributes' => collect($request->validated())
-                ->except(['categories', 'images'])
+                ->except(['categories', 'images', 'options'])
                 ->prepend(Str::slug($request->get('title')), 'slug')
                 ->toArray(),
             'categories' => $request->get('categories', []),
             'images' => $request->file('images', []),
+            'options' => $request->get('options', []),
         ];
     }
 }

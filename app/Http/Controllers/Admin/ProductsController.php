@@ -6,6 +6,7 @@ use App\Enums\Permission\ProductEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Products\CreateRequest;
 use App\Http\Requests\Admin\Products\EditRequest;
+use App\Models\Attributes\Attribute;
 use App\Models\Category;
 use App\Models\Image;
 use App\Models\Product;
@@ -51,14 +52,18 @@ class ProductsController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['categories', 'images']);
+        $product->load(['categories', 'images', 'options']);
 
+        $selectedOptions = $product->options->pluck('id')->toArray();
         $productCategories = $product->categories->pluck('id')->toArray();
+        $attributes = Attribute::with('options')->get();
 
         return view('admin.products.edit', [
             'categories' => Category::all(),
             'product' => $product,
-            'productCategories' => $productCategories
+            'productCategories' => $productCategories,
+            'attributes' => $attributes,
+            'selectedOptions' => $selectedOptions,
         ]);
     }
 

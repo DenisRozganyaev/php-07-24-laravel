@@ -13,6 +13,8 @@ Route::name('admin.')->prefix('admin')->middleware('role:admin|moderator')->grou
     Route::get('/', \App\Http\Controllers\Admin\DashboardController::class)->name('dashboard'); // admin.dashboard
     Route::resource('categories', \App\Http\Controllers\Admin\CategoriesController::class)
         ->except(['show']);
+    Route::resource('attributes', \App\Http\Controllers\Admin\AttributesController::class)
+        ->except(['show']);
     Route::resource('products', \App\Http\Controllers\Admin\ProductsController::class)
         ->except(['show']);
 });
