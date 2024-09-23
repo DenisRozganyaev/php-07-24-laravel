@@ -156,13 +156,14 @@
                                     <button class="btn btn-outline-info add-options" type="button"><i class="fa-regular fa-square-plus"></i></button>
                                 </div>
                             </div>
-                            <div class="row options-wrapper" data-key="0">
+                            <div class="row options-wrapper" data-key="{{$product->options->count()}}">
                                 @foreach($product->options as $key => $option)
                                     <div class="input-group mb-2">
                                         <span class="input-group-text">{{$option->value}}</span>
                                         <input type="hidden" name="options[{{$key}}][attribute_option_id]" min="0" value="{{$option->id}}" class="form-control">
-                                        <input type="number" name="options[{{$key}}][quantity]" min="0" placeholder="Quantity" class="form-control">
-                                        <input type="number" name="options[{{$key}}][price]" placeholder="Single price" class="form-control">
+                                        <input type="number" name="options[{{$key}}][quantity]" min="0" placeholder="Quantity" value="{{$option->pivot->quantity}}" class="form-control">
+                                        <input type="number" name="options[{{$key}}][price]" placeholder="Single price" value="{{$option->pivot->price}}" class="form-control">
+                                        <button class="btn btn-danger remove-option"><i class="fa-solid fa-minus"></i></button>
                                     </div>
                                 @endforeach
                             </div>

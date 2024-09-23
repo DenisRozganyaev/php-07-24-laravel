@@ -6,6 +6,9 @@ use App\Http\Requests\Admin\Products\CreateRequest;
 use App\Http\Requests\Admin\Products\EditRequest;
 use App\Models\Product;
 use App\Repositories\Contracts\ImagesRepositoryContract;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -13,6 +16,20 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
 {
     public function __construct(protected ImagesRepositoryContract $imagesRepository)
     {
+    }
+
+    public function paginate(Request $request): LengthAwarePaginator
+    {
+        $products = Product::with(['categories'])
+            ->select('products.*')
+            ->orderByDesc('id')
+            ->when($request->has('options'), function(Builder $query) use ($request) {
+                $query->join('attribute_option_product', 'products.id', '=', 'attribute_option_product.product_id')
+                    ->where('attribute_option_product.attribute_option_id', $request->input('options'))
+                    ->distinct();
+            });
+
+        return $products->paginate($request->input('per_page', 10));
     }
 
     public function store(CreateRequest $request): Product|false
@@ -40,6 +57,7 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
             DB::beginTransaction();
 
             $data = $this->formRequestData($request);
+
             $product->update($data['attributes']);
             $this->updateRelationData($product, $data);
 
@@ -65,7 +83,14 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
         );
 
         if(!empty($data['options'])) {
-            $product->options()->syncWithoutDetaching($data['options']);
+            $options = collect($data['options'])
+                ->unique(fn ($item) => $item['attribute_option_id'])
+                ->values()
+                ->toArray();
+
+            $product->options()->detach();
+
+            $product->options()->sync($options);
         }
     }
 
