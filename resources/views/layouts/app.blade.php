@@ -33,7 +33,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav me-auto">
-
+                    <a class="nav-link" href="{{ route('products.index') }}">{{ __('Products') }}</a>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -88,5 +88,6 @@
     </div>
 <script src="{{ asset('js/iziToast.js') }}"></script>
 @include('vendor.lara-izitoast.toast')
+@stack('footer-js')
 </body>
 </html>
