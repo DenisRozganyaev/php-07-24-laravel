@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/js/admin/products-preview.js',
                 'resources/js/admin/images-actions.js',
                 'resources/js/admin/attributes.js',
+                'resources/js/cart.js',
             ],
             refresh: true,
         }),

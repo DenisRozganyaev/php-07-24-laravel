@@ -6,7 +6,9 @@ use App\Models\Attributes\Option;
 use App\Observers\ProductObserver;
 use App\Services\Contracts\FileServiceContract;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -23,6 +25,10 @@ class Product extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'option_price' => null
+    ];
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
@@ -36,7 +42,8 @@ class Product extends Model
     public function options(): BelongsToMany
     {
         return $this->belongsToMany(Option::class, 'attribute_option_product', 'product_id', 'attribute_option_id')
-            ->withPivot(['quantity', 'price']);
+            ->withPivot(['quantity', 'price'])
+            ->with(['attribute']);
     }
 
     public function thumbnailUrl(): Attribute
@@ -69,11 +76,26 @@ class Product extends Model
         return Attribute::get(fn() => $this->attributes['discount'] > 0);
     }
 
-    public function finalPrice(): Attribute
+    public function isSimple(): Attribute
     {
-        return Attribute::get(fn() => round(
-            $this->attributes['price'] - ($this->attributes['price'] * ($this->attributes['discount'] / 100)),
+        return Attribute::get(fn() => $this->options->isEmpty());
+    }
+
+    public function optionsWithAttributes(): Collection
+    {
+        return $this->options()
+            ->with(['attribute'])
+            ->get()
+            ?->groupBy(fn($item) => $item->attribute->name);
+    }
+
+    public function finalPrice($price = null): float
+    {
+        $price = $price ?? $this->attributes['price'];
+
+        return round(
+            $price - ($price * ($this->attributes['discount'] / 100)),
             2
-        ));
+        );
     }
 }
