@@ -38,6 +38,17 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="{{ route('cart.index') }}">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span
+                                style="font-size: 10px;"
+                                class="position-absolute top-20 start-90 translate-middle badge rounded-pill bg-info">
+                                {{Cart::instance('cart')->countItems()}}
+                              </span>
+                        </a>
+                    </li>
+
                     <!-- Authentication Links -->
                     @guest
                         @if (Route::has('login'))
@@ -84,8 +95,8 @@
 
     <main class="py-4">
         @yield('content')
-        </main>
-    </div>
+    </main>
+</div>
 <script src="{{ asset('js/iziToast.js') }}"></script>
 @include('vendor.lara-izitoast.toast')
 @stack('footer-js')
