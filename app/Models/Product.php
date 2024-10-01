@@ -6,7 +6,6 @@ use App\Models\Attributes\Option;
 use App\Observers\ProductObserver;
 use App\Services\Contracts\FileServiceContract;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -44,6 +43,11 @@ class Product extends Model
         return $this->belongsToMany(Option::class, 'attribute_option_product', 'product_id', 'attribute_option_id')
             ->withPivot(['quantity', 'price'])
             ->with(['attribute']);
+    }
+
+    public function orders(): BelongsToMany
+    {
+        return $this->belongsToMany(Order::class);
     }
 
     public function thumbnailUrl(): Attribute

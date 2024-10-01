@@ -1,3 +1,3 @@
-$(document).on('click', '.product-qty', function() {
+$(document).on('change', '.product-qty', function() {
     $(this).parent().submit();
 });
