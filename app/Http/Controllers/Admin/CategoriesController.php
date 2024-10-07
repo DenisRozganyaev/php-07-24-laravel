@@ -41,7 +41,9 @@ class CategoriesController extends Controller
             ['slug' => Str::slug($request->get('name'))]
         );
 
-        Category::create($data);
+        $category = Category::create($data);
+
+        notify()->success("Category [$category->name] was created");
 
         return redirect()->route('admin.categories.index');
     }
