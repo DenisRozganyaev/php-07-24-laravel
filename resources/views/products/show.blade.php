@@ -29,19 +29,21 @@
                         @each('categories.parts.label', $product->categories, 'category')
                     </div>
                 </div>
-                {{--                @auth()--}}
-                {{--                    <div class="row mt-5">--}}
-                {{--                        <div class="col-12">--}}
-                {{--                            <h4>Wish List</h4>--}}
-                {{--                        </div>--}}
-                {{--                        <div class="col-12 col-sm-6">--}}
-                {{--                            @include('products.parts.wishlist.exist', ['product' => $product, 'isFollowed' => $wishes['exist'], 'mini' => false])--}}
-                {{--                        </div>--}}
-                {{--                        <div class="col-12 col-sm-6">--}}
-                {{--                            @include('products.parts.wishlist.price', ['product' => $product, 'isFollowed' => $wishes['price'], 'mini' => false])--}}
-                {{--                        </div>--}}
-                {{--                    </div>--}}
-                {{--                @endauth--}}
+
+                @auth()
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <h4>Wish List</h4>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            @include('products.parts.wishlist.exist', ['product' => $product, 'isFollowed' => $wishes['in_stock'], 'mini' => false])
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            @include('products.parts.wishlist.price', ['product' => $product, 'isFollowed' => $wishes['price'], 'mini' => false])
+                        </div>
+                    </div>
+                @endauth
+
                 @if ($attributes)
                     <div class="row mt-5">
                         <div class="col-12 col-sm-6">{{ $attributeKey }}</div>

@@ -2,7 +2,7 @@
     <form action="{{ route('wishlist.remove', $product) }}" method="POST">
         @csrf
         @method('DELETE')
-        <input type="hidden" value="exist" name="type"/>
+        <input type="hidden" value="in_stock" name="type"/>
         @unless($mini)
             <label for="btn-add-exist">Unsubscribe on exists</label>
         @endunless
@@ -13,7 +13,7 @@
 @else
     <form action="{{ route('wishlist.add', $product) }}" method="POST">
         @csrf
-        <input type="hidden" value="exist" name="type"/>
+        <input type="hidden" value="in_stock" name="type"/>
         @unless($mini)
             <label for="btn-add-exist">Subscribe on exists</label>
         @endunless

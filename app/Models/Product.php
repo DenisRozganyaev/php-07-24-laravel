@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Attributes\Option;
 use App\Observers\ProductObserver;
+use App\Observers\WishListObserver;
 use App\Services\Contracts\FileServiceContract;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -17,16 +18,12 @@ use Illuminate\Support\Facades\Storage;
 /**
  * @mixin IdeHelperProduct
  */
-#[ObservedBy(ProductObserver::class)]
+#[ObservedBy([ProductObserver::class, WishListObserver::class])]
 class Product extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
-
-    protected $appends = [
-        'option_price' => null
-    ];
 
     public function categories(): BelongsToMany
     {
@@ -45,6 +42,16 @@ class Product extends Model
             ->with(['attribute']);
     }
 
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'wish_list',
+            'product_id',
+            'user_id'
+        );
+    }
+
     public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class);
@@ -52,15 +59,20 @@ class Product extends Model
 
     public function thumbnailUrl(): Attribute
     {
-        return Attribute::get(function() {
+        return Attribute::get(function () {
             return Storage::url($this->attributes['thumbnail']);
         });
     }
 
-    public function setThumbnailAttribute($image) {
+    public function setThumbnailAttribute($image)
+    {
+        if (is_string($image)) {
+            return;
+        }
+
         $fileService = app(FileServiceContract::class);
 
-        if (! empty($this->attributes['thumbnail'])) {
+        if (!empty($this->attributes['thumbnail'])) {
             $fileService->delete($this->attributes['thumbnail']);
         }
 
@@ -83,6 +95,11 @@ class Product extends Model
     public function isSimple(): Attribute
     {
         return Attribute::get(fn() => $this->options->isEmpty());
+    }
+
+    public function isInStock(): Attribute
+    {
+        return Attribute::get(fn() => $this->attributes['quantity'] > 0);
     }
 
     public function optionsWithAttributes(): Collection

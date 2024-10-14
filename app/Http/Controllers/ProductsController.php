@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\WishListEnum;
 use App\Models\Attributes\Option;
 use App\Models\Image;
 use App\Models\Product;
@@ -44,9 +45,23 @@ class ProductsController extends Controller
             $price = $product->finalPrice($option->pivot->price);
         }
 
+        $wishes = [
+            'in_stock' => auth()->check() ? auth()->user()->isWishedProduct($product, WishListEnum::In_Stock) : false,
+            'price' => auth()->check() ? auth()->user()->isWishedProduct($product, WishListEnum::Price) : false,
+        ];
+
         return view(
             'products.show',
-            compact('product', 'gallery', 'attributes', 'attributeKey', 'quantity', 'price', 'selectedOption')
+            compact(
+                'product',
+                'gallery',
+                'attributes',
+                'attributeKey',
+                'quantity',
+                'price',
+                'selectedOption',
+                'wishes'
+            )
         );
     }
 }
