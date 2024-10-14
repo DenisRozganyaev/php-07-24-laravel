@@ -24,10 +24,6 @@ class Product extends Model
 
     protected $guarded = [];
 
-    protected $appends = [
-        'option_price' => null
-    ];
-
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
@@ -52,15 +48,20 @@ class Product extends Model
 
     public function thumbnailUrl(): Attribute
     {
-        return Attribute::get(function() {
+        return Attribute::get(function () {
             return Storage::url($this->attributes['thumbnail']);
         });
     }
 
-    public function setThumbnailAttribute($image) {
+    public function setThumbnailAttribute($image)
+    {
+        if (is_string($image)) {
+            return;
+        }
+
         $fileService = app(FileServiceContract::class);
 
-        if (! empty($this->attributes['thumbnail'])) {
+        if (!empty($this->attributes['thumbnail'])) {
             $fileService->delete($this->attributes['thumbnail']);
         }
 
