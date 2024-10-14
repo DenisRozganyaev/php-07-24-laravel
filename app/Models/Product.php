@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Attributes\Option;
 use App\Observers\ProductObserver;
+use App\Observers\WishListObserver;
 use App\Services\Contracts\FileServiceContract;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * @mixin IdeHelperProduct
  */
-#[ObservedBy(ProductObserver::class)]
+#[ObservedBy([ProductObserver::class, WishListObserver::class])]
 class Product extends Model
 {
     use HasFactory;
@@ -39,6 +40,16 @@ class Product extends Model
         return $this->belongsToMany(Option::class, 'attribute_option_product', 'product_id', 'attribute_option_id')
             ->withPivot(['quantity', 'price'])
             ->with(['attribute']);
+    }
+
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'wish_list',
+            'product_id',
+            'user_id'
+        );
     }
 
     public function orders(): BelongsToMany
@@ -84,6 +95,11 @@ class Product extends Model
     public function isSimple(): Attribute
     {
         return Attribute::get(fn() => $this->options->isEmpty());
+    }
+
+    public function isInStock(): Attribute
+    {
+        return Attribute::get(fn() => $this->attributes['quantity'] > 0);
     }
 
     public function optionsWithAttributes(): Collection

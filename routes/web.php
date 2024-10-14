@@ -31,6 +31,14 @@ Route::get('orders/{vendorOrderId}/thank-you', \App\Http\Controllers\Pages\Thank
 
 Route::middleware(['auth'])->group(function() {
     Route::get('invoices/{order}', \App\Http\Controllers\InvoicesController::class)->name('invoice');
+
+    Route::post('wishlist/{product}', [\App\Http\Controllers\WishlistController::class, 'add'])->name('wishlist.add');
+    Route::delete('wishlist/{product}', [\App\Http\Controllers\WishlistController::class, 'remove'])->name('wishlist.remove');
+
+    Route::name('account.')->prefix('account')->group(function () {
+        Route::get('/', [App\Http\Controllers\Account\HomeController::class, 'index'])->name('home');
+        Route::get('wishlist', App\Http\Controllers\Account\WishListController::class)->name('wishlist');
+    });
 });
 
 Route::name('admin.')->prefix('admin')->middleware('role:admin|moderator')->group(function() {

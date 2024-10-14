@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\WishListEnum;
+use App\Notifications\WishList\ProductInStockNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -59,5 +61,49 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function wishes(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Product::class,
+            'wish_list',
+            'user_id',
+            'product_id'
+        )->withPivot(['price', 'in_stock']);
+    }
+
+    public function addToWish(Product $product, WishListEnum $type = WishListEnum::Price): void
+    {
+        $wished = $this->wishes()->find($product);
+
+        $data = [
+            $type->value => true,
+        ];
+
+        if ($wished) {
+            $this->wishes()->updateExistingPivot($wished, $data);
+        } else {
+            $this->wishes()->attach($product, $data);
+        }
+    }
+
+    public function removeFromWish(Product $product, WishListEnum $type = WishListEnum::Price): void
+    {
+        $this->wishes()->updateExistingPivot($product, [$type->value => false]);
+
+        $product = $this->wishes()->find($product);
+
+        if (!$product->pivot->in_stock && !$product->pivot->price) {
+            $this->wishes()->detach($product);
+        }
+    }
+
+    public function isWishedProduct(Product $product, WishListEnum $type = WishListEnum::Price): bool
+    {
+        return $this->wishes()
+            ->where('product_id', $product->id)
+            ->wherePivot($type->value, true)
+            ->exists();
     }
 }
