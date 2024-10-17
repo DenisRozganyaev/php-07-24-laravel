@@ -33,6 +33,7 @@ class User extends Authenticatable
         'updated_at',
         'email',
         'password',
+        'telegram_id',
     ];
 
     /**
