@@ -2,10 +2,11 @@
 
 namespace App\Notifications\WishList;
 
+use App\Mail\NewPriceMail;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Notifications\Notification;
 
 class NewPriceNotification extends Notification
@@ -15,7 +16,7 @@ class NewPriceNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(public Product $product)
     {
         $this->onQueue('wishlist-notifications');
     }
@@ -33,14 +34,11 @@ class NewPriceNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(User $user): MailMessage
+    public function toMail(User $user): Mailable
     {
-        return (new MailMessage)
-            ->line("Hey, $user->name $user->lastname")
-            ->line("Product ". $this->product->title ." from your wish list has new lower price!")
-            ->line('Hurry up!')
-            ->action('Visit product page', url(route('products.show', $this->product)))
-            ->line('Thank you for using our application!');
+        return (
+            app(NewPriceMail::class, ['product' => $this->product])
+        )->to($user->email);
     }
 
     /**

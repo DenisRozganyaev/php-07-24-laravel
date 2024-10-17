@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ajax\Payments;
 
 use App\Enums\PaymentSystemEnum;
+use App\Events\OrderCreatedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateOrderRequest;
 use App\Repositories\Contracts\OrderRepositoryContract;
@@ -67,6 +68,8 @@ class PaypalController extends Controller
             );
 
             Cart::instance('cart')->destroy();
+
+            OrderCreatedEvent::dispatch($order);
 
             DB::commit();
 
