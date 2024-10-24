@@ -23,8 +23,8 @@ return new class extends Migration
 
             $table->string('name', 35);
             $table->string('lastname', 50);
-            $table->string('phone', 15)->unique();
-            $table->string('email')->unique();
+            $table->string('phone', 15);
+            $table->string('email');
 
             $table->string('city');
             $table->string('address');
