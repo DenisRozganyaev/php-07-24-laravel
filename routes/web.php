@@ -2,15 +2,7 @@
 
 use App\Http\Controllers\Ajax\Payments\PaypalController;
 use App\Http\Controllers\CheckoutController;
-use App\Models\Order;
 use Illuminate\Support\Facades\Route;
-
-Route::get('invoice', function () {
-    $order = Order::query()->first();
-    $invoice = app(\App\Services\Contracts\InvoicesServiceContract::class);
-
-    return $invoice->generate($order)->stream();
-});
 
 Route::get('/', \App\Http\Controllers\HomeController::class)->name('home');
 

@@ -66,20 +66,21 @@ class Product extends Model
 
     public function setThumbnailAttribute($image)
     {
+        // TODO: change to pass param into FileService
         if (is_string($image)) {
-            return;
+            $this->attributes['thumbnail'] = $image;
+        } else {
+            $fileService = app(FileServiceContract::class);
+
+            if (!empty($this->attributes['thumbnail'])) {
+                $fileService->delete($this->attributes['thumbnail']);
+            }
+
+            $this->attributes['thumbnail'] = $fileService->upload(
+                $image,
+                'products/' . $this->attributes['slug']
+            );
         }
-
-        $fileService = app(FileServiceContract::class);
-
-        if (!empty($this->attributes['thumbnail'])) {
-            $fileService->delete($this->attributes['thumbnail']);
-        }
-
-        $this->attributes['thumbnail'] = $fileService->upload(
-            $image,
-            'products/' . $this->attributes['slug']
-        );
     }
 
     public function imagesPath(): Attribute

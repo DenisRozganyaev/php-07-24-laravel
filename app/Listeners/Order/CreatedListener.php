@@ -2,11 +2,14 @@
 
 namespace App\Listeners\Order;
 
+use App\Enums\RolesEnum;
 use App\Events\OrderCreatedEvent;
+use App\Models\User;
+use App\Notifications\OrderCreatedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Notification;
 
-class CreatedListener
+class CreatedListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -16,11 +19,24 @@ class CreatedListener
         //
     }
 
+    public function viaQueue(): string
+    {
+        return 'listeners';
+    }
+
     /**
      * Handle the event.
      */
     public function handle(OrderCreatedEvent $event): void
     {
-        //
+        logs()->info('CreatedListener event');
+
+        Notification::send(
+            User::role(RolesEnum::ADMIN->value)->get(),
+            app(
+                OrderCreatedNotification::class,
+                ['order' => $event->order]
+            )
+        );
     }
 }

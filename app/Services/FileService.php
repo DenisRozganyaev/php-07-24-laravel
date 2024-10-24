@@ -11,8 +11,12 @@ use Illuminate\Support\Str;
 
 class FileService implements Contracts\FileServiceContract
 {
-    public function upload(UploadedFile $file, string $additionalPath = ''): string
+    public function upload(UploadedFile|string $file, string $additionalPath = ''): string
     {
+        if (is_string($file)) {
+            return $file;
+        }
+
         $additionalPath = !empty($additionalPath) ? $additionalPath . '/' : '';
 
         $filePath =  Str::slug(microtime());
