@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\RolesEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -26,15 +25,10 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $permissions = auth()->user()->hasAnyRole([
-            RolesEnum::ADMIN->value,
-            RolesEnum::MODERATOR->value,
-        ]) ? ['full'] : ['read'];
-
         $token = auth()->user()->createToken(
             $request->get('device_name', 'api'),
-            $permissions,
-            now()->addMinutes(30)
+            [],
+            now()->addHour()
         );
 
         return response()->json([

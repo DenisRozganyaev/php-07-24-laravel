@@ -36,8 +36,27 @@ class Image extends Model
 
     public function url(): Attribute
     {
-        return Attribute::get(function() {
-            return Storage::url($this->attributes['path']);
+        return Attribute::get(function () {
+            if (Storage::disk('public')->exists($this->attributes['path'])) {
+                return Storage::disk('public')->url($this->attributes['path']);
+            }
+
+            if (Storage::exists($this->attributes['path'])) {
+                $key = 'products.images.' . $this->attributes['path'];
+
+                if (!cache()->has($key)) {
+                    $temporaryUrl = Storage::temporaryUrl(
+                        $this->attributes['path'],
+                        now()->addMinutes(10)
+                    );
+
+                    cache()->put($key, $temporaryUrl, 590);
+                }
+
+                return cache()->get($key);
+            }
+
+            return $this->attributes['path'];
         });
     }
 }

@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Http\Requests\Api\v1\StoreProductRequest;
+use App\Http\Requests\Api\v1\UpdateProductRequest;
 
 class ProductsRepository implements Contracts\ProductsRepositoryContract
 {
@@ -32,7 +34,7 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
         return $products->paginate($request->input('per_page', 10));
     }
 
-    public function store(CreateRequest $request): Product|false
+    public function store(CreateRequest|StoreProductRequest $request): Product|false
     {
         try {
             DB::beginTransaction();
@@ -51,7 +53,7 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
         }
     }
 
-    public function update(Product $product, EditRequest $request): bool
+    public function update(Product $product, EditRequest|UpdateProductRequest $request): bool
     {
         try {
             DB::beginTransaction();
@@ -94,7 +96,7 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
         }
     }
 
-    protected function formRequestData(CreateRequest|EditRequest $request): array
+    protected function formRequestData(CreateRequest|StoreProductRequest|EditRequest|UpdateProductRequest $request): array
     {
         return [
             'attributes' => collect($request->validated())
