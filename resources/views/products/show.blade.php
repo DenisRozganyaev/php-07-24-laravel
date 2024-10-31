@@ -42,46 +42,48 @@
                 {{--                        </div>--}}
                 {{--                    </div>--}}
                 {{--                @endauth--}}
-                <div class="row mt-5">
-                    <div class="col-12 col-sm-6">{{ $attributeKey }}</div>
-                    <div class="col-12 col-sm-6">
-                        <div class="card">
-                            <form method="GET" action="{{ route('products.show', $product) }}"
-                                  class="card-body d-flex align-items-center justify-content-between">
+                @if ($attributes)
+                    <div class="row mt-5">
+                        <div class="col-12 col-sm-6">{{ $attributeKey }}</div>
+                        <div class="col-12 col-sm-6">
+                            <div class="card">
+                                <form method="GET" action="{{ route('products.show', $product) }}"
+                                      class="card-body d-flex align-items-center justify-content-between">
 
-                                <table class="table table-striped-columns">
-                                    <thead>
-                                    <tr>
-                                        <th>Attribute</th>
-                                        <th>Quantity</th>
-                                        <th>Price</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($attributes as $attr)
+                                    <table class="table table-striped-columns">
+                                        <thead>
                                         <tr>
-                                            <td>
-                                                <input type="radio"
-                                                       class="btn-check product-attr-radio"
-                                                       name="option"
-                                                       value="{{$attr->id}}"
-                                                       id="option-{{$attr->value}}"
-                                                       autocomplete="off"
-                                                       @if ($selectedOption == $attr->id) checked @endif
-                                                >
-                                                <label class="btn"
-                                                       for="option-{{$attr->value}}">{{$attr->value}}</label>
-                                            </td>
-                                            <td>{{$attr->pivot->quantity}}</td>
-                                            <td>{{$product->finalPrice($attr->pivot->price)}} $</td>
+                                            <th>Attribute</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
                                         </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </form>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($attributes as $attr)
+                                            <tr>
+                                                <td>
+                                                    <input type="radio"
+                                                           class="btn-check product-attr-radio"
+                                                           name="option"
+                                                           value="{{$attr->id}}"
+                                                           id="option-{{$attr->value}}"
+                                                           autocomplete="off"
+                                                           @if ($selectedOption == $attr->id) checked @endif
+                                                    >
+                                                    <label class="btn"
+                                                           for="option-{{$attr->value}}">{{$attr->value}}</label>
+                                                </td>
+                                                <td>{{$attr->pivot->quantity}}</td>
+                                                <td>{{$product->finalPrice($attr->pivot->price)}} $</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
                 <div class="row mt-5">
                     <div class="col-12 col-sm-6"></div>
                     <div class="col-12 col-sm-6">
