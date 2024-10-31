@@ -33,6 +33,11 @@ const attributeFieldTemplate = `
 `
 
 $(document).ready(function() {
+    $(selectors.attributes.removeBtn).on('click', function(e) {
+        e.preventDefault();
+        $(this).parent().remove();
+    })
+
     $(selectors.attributes.addBtn).on('click', function(e) {
         e.preventDefault()
 
