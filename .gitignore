@@ -19,3 +19,5 @@ yarn-error.log
 /.idea
 /.vscode
 .DS_Store
+_ide_*.php
+laradumps.yaml
