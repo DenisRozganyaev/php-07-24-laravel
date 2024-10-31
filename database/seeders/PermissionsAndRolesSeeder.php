@@ -33,12 +33,12 @@ class PermissionsAndRolesSeeder extends Seeder
             Permission::findOrCreate($permission);
         }
 
-        if (!Role::where('name', RolesEnum::CUSTOMER->value)->exists()) {
+        if (! Role::where('name', RolesEnum::CUSTOMER->value)->exists()) {
             Role::create(['name' => RolesEnum::CUSTOMER->value])
                 ->givePermissionTo(AccountEnum::values());
         }
 
-        if (!Role::where('name', RolesEnum::MODERATOR->value)->exists()) {
+        if (! Role::where('name', RolesEnum::MODERATOR->value)->exists()) {
             Role::create(['name' => RolesEnum::MODERATOR->value])
                 ->givePermissionTo([
                     ...CategoryEnum::values(),
@@ -46,7 +46,7 @@ class PermissionsAndRolesSeeder extends Seeder
                 ]);
         }
 
-        if (!Role::where('name', RolesEnum::ADMIN->value)->exists()) {
+        if (! Role::where('name', RolesEnum::ADMIN->value)->exists()) {
             Role::create(['name' => RolesEnum::ADMIN->value])
                 ->givePermissionTo(Permission::all());
         }
