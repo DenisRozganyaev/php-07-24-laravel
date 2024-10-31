@@ -4,6 +4,10 @@ use App\Http\Controllers\Ajax\Payments\PaypalController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('test', function() {
+   \App\Events\Broadcast\CreatedOrderEvent::dispatch(1, 250.5, url(route('admin.dashboard')));
+});
+
 Route::get('/', \App\Http\Controllers\HomeController::class)->name('home');
 
 Auth::routes();

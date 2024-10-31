@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Ajax\Payments;
 
 use App\Enums\PaymentSystemEnum;
+use App\Events\Broadcast\CreatedOrderEvent;
 use App\Events\OrderCreatedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateOrderRequest;
 use App\Repositories\Contracts\OrderRepositoryContract;
 use App\Services\Contracts\PaypalServiceContract;
-use App\Services\PaypalService;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PaypalController extends Controller
@@ -70,6 +69,7 @@ class PaypalController extends Controller
             Cart::instance('cart')->destroy();
 
             OrderCreatedEvent::dispatch($order);
+            CreatedOrderEvent::dispatch($order->id, $order->total, url(route('admin.dashboard')));
 
             DB::commit();
 
