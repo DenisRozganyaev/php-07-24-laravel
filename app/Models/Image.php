@@ -42,9 +42,9 @@ class Image extends Model
             }
 
             if (Storage::exists($this->attributes['path'])) {
-                $key = 'products.images.' . $this->attributes['path'];
+                $key = 'products.images.'.$this->attributes['path'];
 
-                if (!cache()->has($key)) {
+                if (! cache()->has($key)) {
                     $temporaryUrl = Storage::temporaryUrl(
                         $this->attributes['path'],
                         now()->addMinutes(10)

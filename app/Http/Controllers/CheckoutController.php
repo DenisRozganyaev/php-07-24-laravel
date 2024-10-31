@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
@@ -11,6 +10,7 @@ class CheckoutController extends Controller
     {
         if (Cart::instance('cart')->content()->isEmpty()) {
             notify()->warning('Your cart is empty, you are can not proceed to checkout');
+
             return redirect()->route('home');
         }
 

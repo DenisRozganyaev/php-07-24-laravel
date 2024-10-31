@@ -61,6 +61,7 @@ class CartController extends Controller
 
         if ($data['qty'] > $maxQuantity) {
             notify()->warning("Maximum quantity for product '{$product->title}' is {$maxQuantity}");
+
             return redirect()->back();
         }
 
@@ -74,12 +75,12 @@ class CartController extends Controller
     public function remove(Request $request)
     {
         $data = $request->validate([
-            'rowId' => ['required', 'string']
+            'rowId' => ['required', 'string'],
         ]);
 
         Cart::instance('cart')->remove($data['rowId']);
 
-        notify()->success("Product was removed");
+        notify()->success('Product was removed');
 
         return redirect()->back();
     }

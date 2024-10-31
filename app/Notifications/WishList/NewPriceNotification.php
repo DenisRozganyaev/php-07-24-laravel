@@ -36,9 +36,9 @@ class NewPriceNotification extends Notification
      */
     public function toMail(User $user): Mailable
     {
-        return (
+        return
             app(NewPriceMail::class, ['product' => $this->product])
-        )->to($user->email);
+                ->to($user->email);
     }
 
     /**

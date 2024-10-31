@@ -16,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable
 {
-    use HasFactory, HasRoles, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -95,7 +95,7 @@ class User extends Authenticatable
 
         $product = $this->wishes()->find($product);
 
-        if (!$product->pivot->in_stock && !$product->pivot->price) {
+        if (! $product->pivot->in_stock && ! $product->pivot->price) {
             $this->wishes()->detach($product);
         }
     }

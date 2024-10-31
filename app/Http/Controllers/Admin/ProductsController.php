@@ -8,7 +8,6 @@ use App\Http\Requests\Admin\Products\CreateRequest;
 use App\Http\Requests\Admin\Products\EditRequest;
 use App\Models\Attributes\Attribute;
 use App\Models\Category;
-use App\Models\Image;
 use App\Models\Product;
 use App\Repositories\Contracts\ProductsRepositoryContract;
 
@@ -39,6 +38,7 @@ class ProductsController extends Controller
     {
         if ($product = $repository->store($request)) {
             notify()->success("Product '$product->title' was created");
+
             return redirect()->route('admin.products.index');
         }
 
@@ -74,6 +74,7 @@ class ProductsController extends Controller
     {
         if ($repository->update($product, $request)) {
             notify()->success("Product '$product->title' was updated");
+
             return redirect()->route('admin.products.edit', $product);
         }
 
@@ -88,7 +89,7 @@ class ProductsController extends Controller
     public function destroy(Product $product)
     {
         try {
-            $this->middleware('permission:'. ProductEnum::DELETE->value);
+            $this->middleware('permission:'.ProductEnum::DELETE->value);
             $product->deleteOrFail();
 
             notify()->success("Product '$product->title' was updated");

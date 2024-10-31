@@ -16,7 +16,7 @@ class AuthController extends Controller
             'password' => ['required', 'string', Password::default()],
         ]);
 
-        if (!auth()->attempt($data)) {
+        if (! auth()->attempt($data)) {
             return response()->json([
                 'status' => 'error',
                 'data' => [
@@ -34,7 +34,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => [
-                'token' => $token->plainTextToken
+                'token' => $token->plainTextToken,
             ]]);
     }
 }

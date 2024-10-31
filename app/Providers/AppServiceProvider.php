@@ -36,10 +36,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-//        app()->bind(ProductsRepositoryContract::class, ProductsRepository::class);
-//        app()->when(ProductsController::class)
-//            ->needs(ProductsRepositoryContract::class)
-//            ->give(ProductsRepository::class);
+        //        app()->bind(ProductsRepositoryContract::class, ProductsRepository::class);
+        //        app()->when(ProductsController::class)
+        //            ->needs(ProductsRepositoryContract::class)
+        //            ->give(ProductsRepository::class);
     }
 
     /**

@@ -13,6 +13,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 interface ProductsRepositoryContract
 {
     public function paginate(Request $request): LengthAwarePaginator;
+
     public function store(CreateRequest|StoreProductRequest $request): Product|false;
+
     public function update(Product $product, EditRequest|UpdateProductRequest $request): bool;
 }

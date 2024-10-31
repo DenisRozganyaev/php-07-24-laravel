@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use Illuminate\Http\Request;
 
 class ThankYouController extends Controller
 {
@@ -20,6 +19,7 @@ class ThankYouController extends Controller
             return view('orders/thank-you', compact('order', 'showInvoiceBtn'));
         } catch (\Throwable $th) {
             logs()->warning($th);
+
             return redirect()->route('home');
         }
     }

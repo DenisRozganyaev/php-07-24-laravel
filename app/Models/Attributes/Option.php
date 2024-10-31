@@ -21,7 +21,7 @@ class Option extends Model
 
     public function scopeFilter(Builder $query, array $ids = []): Collection
     {
-        $productsIds = Product::when($ids, function(Builder $query) use ($ids) {
+        $productsIds = Product::when($ids, function (Builder $query) use ($ids) {
             $query->whereIn('id', $ids);
         })->get()->pluck('id');
 
@@ -36,7 +36,7 @@ class Option extends Model
 
         return $attributes->isEmpty()
             ? $attributes
-            : $attributes?->groupBy(fn($item) => $item->attribute->name);
+            : $attributes?->groupBy(fn ($item) => $item->attribute->name);
     }
 
     // attribute_id

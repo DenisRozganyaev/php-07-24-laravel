@@ -58,9 +58,9 @@ class OrderCreatedNotification extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('New Order')
             ->line("Hello $user->name $user->lastname")
-            ->line("A new order here")
+            ->line('A new order here')
             ->line('')
-            ->line('Total: ' . $this->order->total . ' ' . config('paypal.currency'))
+            ->line('Total: '.$this->order->total.' '.config('paypal.currency'))
             ->attach(Storage::path($invoice->filename))
             ->action('Visit admin dashboard', $url);
     }
@@ -71,14 +71,14 @@ class OrderCreatedNotification extends Notification implements ShouldQueue
 
         $url = route('admin.dashboard');
 
-        logs()->info('TOKEN => ' . config('services.telegram-bot-api.token'));
+        logs()->info('TOKEN => '.config('services.telegram-bot-api.token'));
 
         return TelegramMessage::create()
             ->to($user->telegram_id)
             ->content("Hello $user->name $user->lastname")
-            ->line("A new order here")
+            ->line('A new order here')
             ->line('')
-            ->line('Total: ' . $this->order->total . ' ' . config('paypal.currency'))
+            ->line('Total: '.$this->order->total.' '.config('paypal.currency'))
             ->button('Visit admin dashboard', $url);
     }
 }

@@ -15,7 +15,8 @@ class ProductsControllerTest extends TestCase
 {
     use SetupTrait;
 
-    #[NoReturn] public function test_it_creates_product_with_valid_data(): void
+    #[NoReturn]
+    public function test_it_creates_product_with_valid_data(): void
     {
         Storage::fake('public');
 

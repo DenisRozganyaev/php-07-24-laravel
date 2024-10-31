@@ -65,9 +65,9 @@ class Product extends Model
             }
 
             if (Storage::exists($this->attributes['thumbnail'])) {
-                $key = 'products.thumbnail.' . $this->attributes['id'];
+                $key = 'products.thumbnail.'.$this->attributes['id'];
 
-                if (!cache()->has($key)) {
+                if (! cache()->has($key)) {
                     $temporaryUrl = Storage::temporaryUrl(
                         $this->attributes['thumbnail'],
                         now()->addMinutes(10)
@@ -91,35 +91,35 @@ class Product extends Model
         } else {
             $fileService = app(FileServiceContract::class);
 
-            if (!empty($this->attributes['thumbnail'])) {
+            if (! empty($this->attributes['thumbnail'])) {
                 $fileService->delete($this->attributes['thumbnail']);
             }
 
             $this->attributes['thumbnail'] = $fileService->upload(
                 $image,
-                'products/' . $this->attributes['slug']
+                'products/'.$this->attributes['slug']
             );
         }
     }
 
     public function imagesPath(): Attribute
     {
-        return Attribute::get(fn() => 'products/' . $this->attributes['slug']);
+        return Attribute::get(fn () => 'products/'.$this->attributes['slug']);
     }
 
     public function withDiscount(): Attribute
     {
-        return Attribute::get(fn() => $this->attributes['discount'] > 0);
+        return Attribute::get(fn () => $this->attributes['discount'] > 0);
     }
 
     public function isSimple(): Attribute
     {
-        return Attribute::get(fn() => $this->options->isEmpty());
+        return Attribute::get(fn () => $this->options->isEmpty());
     }
 
     public function isInStock(): Attribute
     {
-        return Attribute::get(fn() => $this->attributes['quantity'] > 0);
+        return Attribute::get(fn () => $this->attributes['quantity'] > 0);
     }
 
     public function optionsWithAttributes(): Collection
@@ -127,7 +127,7 @@ class Product extends Model
         return $this->options()
             ->with(['attribute'])
             ->get()
-            ?->groupBy(fn($item) => $item->attribute->name);
+            ?->groupBy(fn ($item) => $item->attribute->name);
     }
 
     public function finalPrice($price = null): float

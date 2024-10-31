@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Http\Requests\Admin\Products\CreateRequest;
 use App\Http\Requests\Admin\Products\EditRequest;
+use App\Http\Requests\Api\v1\StoreProductRequest;
+use App\Http\Requests\Api\v1\UpdateProductRequest;
 use App\Models\Product;
 use App\Repositories\Contracts\ImagesRepositoryContract;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,21 +13,17 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Http\Requests\Api\v1\StoreProductRequest;
-use App\Http\Requests\Api\v1\UpdateProductRequest;
 
 class ProductsRepository implements Contracts\ProductsRepositoryContract
 {
-    public function __construct(protected ImagesRepositoryContract $imagesRepository)
-    {
-    }
+    public function __construct(protected ImagesRepositoryContract $imagesRepository) {}
 
     public function paginate(Request $request): LengthAwarePaginator
     {
         $products = Product::with(['categories'])
             ->select('products.*')
             ->orderByDesc('id')
-            ->when($request->has('options'), function(Builder $query) use ($request) {
+            ->when($request->has('options'), function (Builder $query) use ($request) {
                 $query->join('attribute_option_product', 'products.id', '=', 'attribute_option_product.product_id')
                     ->where('attribute_option_product.attribute_option_id', $request->input('options'))
                     ->distinct();
@@ -49,6 +47,7 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
         } catch (\Throwable $exception) {
             DB::rollBack();
             logs()->error($exception);
+
             return false;
         }
     }
@@ -69,6 +68,7 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
         } catch (\Throwable $exception) {
             DB::rollBack();
             logs()->error($exception);
+
             return false;
         }
     }
@@ -84,7 +84,7 @@ class ProductsRepository implements Contracts\ProductsRepositoryContract
             $product->imagesPath
         );
 
-        if(!empty($data['options'])) {
+        if (! empty($data['options'])) {
             $options = collect($data['options'])
                 ->unique(fn ($item) => $item['attribute_option_id'])
                 ->values()

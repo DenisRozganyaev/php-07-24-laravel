@@ -17,7 +17,7 @@ class Order extends Model
 
     protected $casts = [
         'status' => OrderStatusEnum::class,
-        'total' => 'float'
+        'total' => 'float',
     ];
 
     public function user(): BelongsTo

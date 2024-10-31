@@ -8,19 +8,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateOrderRequest;
 use App\Repositories\Contracts\OrderRepositoryContract;
 use App\Services\Contracts\PaypalServiceContract;
-use App\Services\PaypalService;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PaypalController extends Controller
 {
     public function __construct(
-        protected PaypalServiceContract   $paypalService,
+        protected PaypalServiceContract $paypalService,
         protected OrderRepositoryContract $orderRepository
-    )
-    {
-    }
+    ) {}
 
     public function create(CreateOrderRequest $request)
     {
@@ -35,7 +31,7 @@ class PaypalController extends Controller
 
             $data = [
                 ...$request->validated(),
-                'vendor_order_id' => $paypalOrderId
+                'vendor_order_id' => $paypalOrderId,
             ];
 
             $order = $this->orderRepository->create($data);
@@ -49,7 +45,7 @@ class PaypalController extends Controller
             logs()->error($exception);
 
             return response()->json([
-               'error' => $exception->getMessage()
+                'error' => $exception->getMessage(),
             ], 422);
         }
     }
@@ -80,7 +76,7 @@ class PaypalController extends Controller
             logs()->error($exception);
 
             return response()->json([
-                'error' => $exception->getMessage()
+                'error' => $exception->getMessage(),
             ], 422);
         }
     }

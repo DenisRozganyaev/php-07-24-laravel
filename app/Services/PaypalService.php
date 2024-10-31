@@ -3,13 +3,11 @@
 namespace App\Services;
 
 use App\Enums\TransactionStatusEnum;
-use App\Services\Contracts\PaypalServiceContract;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Srmklive\PayPal\Services\PayPal;
 
 class PaypalService implements Contracts\PaypalServiceContract
 {
-
     protected Paypal $paypal;
 
     public function __construct()
@@ -26,7 +24,7 @@ class PaypalService implements Contracts\PaypalServiceContract
         );
 
         logs()->info('Paypal create order response:', [
-            'response' => $paypalOrder
+            'response' => $paypalOrder,
         ]);
 
         return $paypalOrder['id'] ?? null;
@@ -37,10 +35,10 @@ class PaypalService implements Contracts\PaypalServiceContract
         $result = $this->paypal->capturePaymentOrder($vendorOrderId);
 
         logs()->info('Paypal capture order response:', [
-            'response' => $result
+            'response' => $result,
         ]);
 
-        return match($result['status']) {
+        return match ($result['status']) {
             'COMPLETED', 'APPROVED' => TransactionStatusEnum::Success,
             'CREATED', 'SAVED' => TransactionStatusEnum::Pending,
             default => TransactionStatusEnum::Cancelled

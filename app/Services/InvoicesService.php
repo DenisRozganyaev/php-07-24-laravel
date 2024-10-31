@@ -11,19 +11,18 @@ use LaravelDaily\Invoices\Invoice;
 
 class InvoicesService implements Contracts\InvoicesServiceContract
 {
-
     public function generate(Order $order): Invoice
     {
         $order->loadMissing(['transaction', 'products']);
 
         $customer = new Buyer([
-            'name' => $order->name . ' ' . $order->lastname,
+            'name' => $order->name.' '.$order->lastname,
             'phone' => $order->phone,
             'custom_fields' => [
                 'email' => $order->email,
                 'city' => $order->city,
-                'address' => $order->address
-            ]
+                'address' => $order->address,
+            ],
         ]);
 
         $invoice = Invoice::make('receipt')
