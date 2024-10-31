@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\Permission\CategoryEnum as Permission;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Attributes\CreateRequest;
 use App\Http\Requests\Admin\Categories\EditRequest;
+use App\Http\Requests\Attributes\CreateRequest;
 use App\Models\Attributes\Attribute;
 use App\Models\Category;
 use Illuminate\Support\Str;
@@ -78,7 +78,7 @@ class AttributesController extends Controller
      */
     public function destroy(Category $category)
     {
-        $this->middleware('permission:'. Permission::DELETE->value);
+        $this->middleware('permission:'.Permission::DELETE->value);
 
         $category->deleteOrFail();
 

@@ -14,7 +14,7 @@ class TelegramAuthController extends Controller
         ]);
 
         auth()->user()->update([
-           'telegram_id' => $data['id'],
+            'telegram_id' => $data['id'],
         ]);
 
         return redirect()->back();

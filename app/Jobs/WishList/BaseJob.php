@@ -30,7 +30,7 @@ abstract class BaseJob implements ShouldQueue
     {
         $this->product
             ->followers()
-            ->wherePivot($type->value,  true)
+            ->wherePivot($type->value, true)
             ->chunk( // 1500 -> 3 iterates 500 500 500
                 100,
                 fn (Collection $users) => Notification::send(

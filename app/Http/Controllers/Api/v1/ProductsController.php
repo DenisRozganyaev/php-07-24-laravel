@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
 {
-
     public function __construct()
     {
         $this->authorizeResource(Product::class, 'product');
@@ -35,15 +34,15 @@ class ProductsController extends Controller
         if ($product = $repository->store($request)) {
             return response()->json([
                 'status' => 'success',
-                'data' => new ProductResource($product)
+                'data' => new ProductResource($product),
             ]);
         }
 
         return response()->json([
             'status' => 'error',
             'data' => [
-                'message' => 'Something went wrong'
-            ]
+                'message' => 'Something went wrong',
+            ],
         ], 422);
     }
 
@@ -65,15 +64,15 @@ class ProductsController extends Controller
         if ($repository->update($product, $request)) {
             return response()->json([
                 'status' => 'success',
-                'data' => new ProductResource($product)
+                'data' => new ProductResource($product),
             ]);
         }
 
         return response()->json([
             'status' => 'error',
             'data' => [
-                'message' => 'Something went wrong'
-            ]
+                'message' => 'Something went wrong',
+            ],
         ], 422);
     }
 
@@ -92,7 +91,7 @@ class ProductsController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'data' => new ProductResource($product)
+                'data' => new ProductResource($product),
             ]);
         } catch (\Throwable $exception) {
             DB::rollBack();
@@ -103,8 +102,8 @@ class ProductsController extends Controller
                 'status' => 'error',
                 'data' => [
                     'message' => $exception->getMessage(),
-                    'code' => $exception->getCode()
-                ]
+                    'code' => $exception->getCode(),
+                ],
             ], 422);
         }
     }

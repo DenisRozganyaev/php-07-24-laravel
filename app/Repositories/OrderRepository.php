@@ -10,7 +10,6 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 
 class OrderRepository implements Contracts\OrderRepositoryContract
 {
-
     public function create(array $data): Order|false
     {
         $data = array_merge($data, [
@@ -41,7 +40,7 @@ class OrderRepository implements Contracts\OrderRepositoryContract
                 TransactionStatusEnum::Success => OrderStatusEnum::Paid,
                 TransactionStatusEnum::Cancelled => OrderStatusEnum::Cancelled,
                 default => OrderStatusEnum::InProcess,
-            }
+            },
         ]);
 
         return $order;
@@ -58,12 +57,12 @@ class OrderRepository implements Contracts\OrderRepositoryContract
                 'name' => $product->title,
                 'attributes' => $item->options->implode(function ($opt, $key) {
                     return "$key: $opt";
-                })
+                }),
             ]);
 
             $quantity = $product->quantity - $item->qty;
 
-            if ($quantity < 0 || !$product->update(['quantity' => $quantity])) {
+            if ($quantity < 0 || ! $product->update(['quantity' => $quantity])) {
                 throw new \Exception("Not enough product [$product->name] quantity");
             }
         });

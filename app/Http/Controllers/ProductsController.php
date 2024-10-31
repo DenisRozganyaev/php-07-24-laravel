@@ -7,7 +7,6 @@ use App\Models\Attributes\Option;
 use App\Models\Image;
 use App\Models\Product;
 use App\Repositories\Contracts\ProductsRepositoryContract;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class ProductsController extends Controller
@@ -29,7 +28,7 @@ class ProductsController extends Controller
         $product->load(['categories', 'images']);
         $gallery = [
             $product->thumbnailUrl,
-            ...$product->images->map(fn(Image $image) => $image->url)
+            ...$product->images->map(fn (Image $image) => $image->url),
         ];
         $attributes = $product->optionsWithAttributes();
         $attributeKey = $attributes->keys()->first();

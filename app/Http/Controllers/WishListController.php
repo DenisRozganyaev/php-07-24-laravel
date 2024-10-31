@@ -12,7 +12,7 @@ class WishListController extends Controller
     public function add(Request $request, Product $product)
     {
         $data = $request->validate([
-            'type' => Rule::enum(WishListEnum::class)
+            'type' => Rule::enum(WishListEnum::class),
         ]);
 
         auth()->user()->addToWish($product, WishListEnum::from($data['type']));
@@ -25,7 +25,7 @@ class WishListController extends Controller
     public function remove(Request $request, Product $product)
     {
         $data = $request->validate([
-            'type' => Rule::enum(WishListEnum::class)
+            'type' => Rule::enum(WishListEnum::class),
         ]);
 
         auth()->user()->removeFromWish($product, WishListEnum::from($data['type']));

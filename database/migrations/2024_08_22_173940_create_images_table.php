@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('path');
             $table->unsignedBigInteger('imageable_id'); // 5, 12, 16
-            $table->string('imageable_type');// User::class, Product::class, Category::class
+            $table->string('imageable_type'); // User::class, Product::class, Category::class
             $table->timestamps();
         });
     }

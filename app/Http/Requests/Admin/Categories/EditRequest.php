@@ -2,16 +2,13 @@
 
 namespace App\Http\Requests\Admin\Categories;
 
+use App\Enums\Permission\CategoryEnum as Permission;
 use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Enums\Permission\CategoryEnum as Permission;
 use Illuminate\Validation\Rule;
 
 class EditRequest extends FormRequest
 {
-    /**
-     * @return string
-     */
     public function getRedirectRoute(): string
     {
         return route('admin.categories.edit', $this->route('category'));

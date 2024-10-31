@@ -4,9 +4,6 @@ namespace Tests\Feature\Http\Controllers\Admin;
 
 use App\Enums\RolesEnum;
 use App\Models\Category;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Tests\Feature\Traits\SetupTrait;
 use Tests\TestCase;
@@ -75,7 +72,7 @@ class CategoriesControllerTest extends TestCase
     {
         $parent = Category::factory()->createOne();
         $category = Category::factory()->makeOne([
-            'parent_id' => $parent->id
+            'parent_id' => $parent->id,
         ])->toArray();
 
         $this->assertDatabaseMissing('categories', [
@@ -114,7 +111,7 @@ class CategoriesControllerTest extends TestCase
     public function test_it_fails_when_parent_id_is_wrong(): void
     {
         $data = Category::factory()->makeOne([
-            'parent_id' => 989898989
+            'parent_id' => 989898989,
         ])->toArray();
 
         $this->assertDatabaseMissing('categories', [
@@ -144,17 +141,16 @@ class CategoriesControllerTest extends TestCase
         $this->assertDatabaseHas('categories', $category->toArray());
         $this->assertDatabaseMissing('categories', $newData);
 
-
         $response = $this->actingAs($this->user())
             ->put(route('admin.categories.update', $category), $newData);
 
         $this->assertDatabaseHas('categories', [
             'name' => $newName,
-            'slug' => Str::slug($newName)
+            'slug' => Str::slug($newName),
         ]);
         $this->assertDatabaseMissing('categories', [
             'name' => $category->name,
-            'slug' => $category->slug
+            'slug' => $category->slug,
         ]);
     }
 

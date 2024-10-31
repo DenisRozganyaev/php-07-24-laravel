@@ -2,8 +2,6 @@
 
 namespace App\Enums;
 
-use BackedEnum;
-
 enum WishListEnum: string
 {
     case Price = 'price';

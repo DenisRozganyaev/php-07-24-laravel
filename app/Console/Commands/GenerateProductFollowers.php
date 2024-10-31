@@ -31,7 +31,7 @@ class GenerateProductFollowers extends Command
         $count = $this->option('count') ?? 500;
         $type = [
             'price',
-            'in_stock'
+            'in_stock',
         ];
         $typeStep = 0;
         $product = Product::findOrFail($productId);
@@ -42,10 +42,10 @@ class GenerateProductFollowers extends Command
             ->pluck('id')
             ->chunk(100);
 
-        $this->withProgressBar($users, function($users) use ($product, $type, &$step) {
+        $this->withProgressBar($users, function ($users) use ($product, $type, &$step) {
             $data = [];
             $this->newLine();
-            foreach($users as $id) {
+            foreach ($users as $id) {
                 $data[$id] = [$type[rand(0, 1)] => true];
 
                 $this->info("[Step: $step] Generate data for user $id..");
