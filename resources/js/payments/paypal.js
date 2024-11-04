@@ -69,7 +69,7 @@ paypal.Buttons({
 
     // Call your server to finalize the transaction
     onApprove: function (data, actions) {
-        return axios.post(`/ajax/paypal/order/${data.orderID}/capture/`, {})
+        return axios.post(`/ajax/paypal/order/${data.orderID}/capture`, {})
             .then(function (res) {
                 return res.data;
             }).then(function (orderData) {
