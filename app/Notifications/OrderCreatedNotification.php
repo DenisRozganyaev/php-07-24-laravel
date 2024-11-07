@@ -51,17 +51,12 @@ class OrderCreatedNotification extends Notification implements ShouldQueue
 
         $url = route('admin.dashboard');
 
-        $invoice = app(InvoicesServiceContract::class)
-            ->generate($this->order)
-            ->save();
-
         return (new MailMessage)
             ->subject('New Order')
             ->line("Hello $user->name $user->lastname")
             ->line('A new order here')
             ->line('')
             ->line('Total: '.$this->order->total.' '.config('paypal.currency'))
-            ->attach(Storage::path($invoice->filename))
             ->action('Visit admin dashboard', $url);
     }
 

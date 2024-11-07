@@ -2,7 +2,21 @@
 
 use App\Http\Controllers\Ajax\Payments\PaypalController;
 use App\Http\Controllers\CheckoutController;
+use App\Models\Order;
 use Illuminate\Support\Facades\Route;
+
+Route::get('test-job', function () {
+    $order = Order::all()?->random();
+
+    if ($order) {
+        notify()->success('Run an event');
+        \App\Events\OrderCreatedEvent::dispatch($order);
+    } else {
+        notify()->error('There are no orders yet');
+    }
+
+    return redirect()->route('home');
+});
 
 Route::get('/', \App\Http\Controllers\HomeController::class)->name('home');
 

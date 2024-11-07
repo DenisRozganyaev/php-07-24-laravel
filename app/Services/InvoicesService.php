@@ -32,7 +32,7 @@ class InvoicesService implements Contracts\InvoicesServiceContract
             ->taxRate(config('cart.tax'))
             ->addItems($this->invoiceItems($order->products))
             ->logo(public_path('vendor/invoices/sample-logo.png'))
-            ->save('public');
+            ->save('s3');
 
         if ($order->status->value === OrderStatusEnum::InProcess->value) {
             $invoice->payUntilDays(config('invoices.date.pay_until_days'));
